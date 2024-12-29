@@ -1,4 +1,3 @@
--name: Node.js CI
 +name: Node.js CI with Lockfiles
 
  jobs:
@@ -16,17 +15,17 @@
        with:
          node-version: ${{ matrix.node-version }}
          cache: 'npm'
--    - name: Install Dependencies for Backend
-+    - name: Install Dependencies and Generate Lockfile for Backend
+
+     - name: Install Dependencies and Generate Lockfile for Backend
        run: |
          cd backend
-+        npm install --package-lock
+         npm install --package-lock
          npm ci
--    - name: Install Dependencies for Frontend
-+    - name: Install Dependencies and Generate Lockfile for Frontend
+         
+     - name: Install Dependencies and Generate Lockfile for Frontend
        run: |
          cd frontend
-+        npm install --package-lock
+         npm install --package-lock
          npm ci
      - name: Build Backend
        run: |
