@@ -1,31 +1,55 @@
-+name: Node.js CI with Lockfiles
+name: Node.js CI with Lockfiles
 
- jobs:
-   build:
-     runs-on: ubuntu-latest
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
-     strategy:
-       matrix:
-         node-version: [20.x]
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-     steps:
-     - uses: actions/checkout@v4
-     - name: Use Node.js ${{ matrix.node-version }}
-       uses: actions/setup-node@v4
-       with:
-         node-version: ${{ matrix.node-version }}
-         cache: 'npm'
+    strategy:
+      matrix:
+        node-version: [20.x]
 
-     - name: Install Dependencies and Generate Lockfile for Backend
-       run: |
-         cd backend
-         npm install --package-lock
-         npm ci
-         
-     - name: Install Dependencies and Generate Lockfile for Frontend
-       run: |
-         cd frontend
-         npm install --package-lock
-         npm ci
-     - name: Build Backend
-       run: |
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install Dependencies and Generate Lockfile for Backend
+      run: |
+        cd backend
+        npm install --package-lock
+        npm ci
+
+    - name: Install Dependencies and Generate Lockfile for Frontend
+      run: |
+        cd frontend
+        npm install --package-lock
+        npm ci
+
+    - name: Build Backend
+      run: |
+        cd backend
+        npm run build --if-present
+
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build --if-present
+
+    - name: Test Backend
+      run: |
+        cd backend
+        npm test
+
+    - name: Test Frontend
+      run: |
+        cd frontend
+        npm test
