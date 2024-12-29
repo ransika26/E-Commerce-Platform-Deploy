@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios for HTTP requests
-import "./Seller_signup.css";
+import "./seller_signup.css";
 
 const Geolocation = [
   { value: "Global", label: "Global" },
