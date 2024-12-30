@@ -1,7 +1,9 @@
 version: '3.8'
 services:
   frontend-builder:
-    image: node:20
+    build:
+      context: ./frontend
+    image: ${DOCKER_USERNAME}/frontend-builder:latest
     container_name: frontend-builder-container
     working_dir: /app
     volumes:
@@ -11,7 +13,9 @@ services:
       - fs-app
 
   frontend-nginx:
-    image: nginx:latest
+    build:
+      context: ./frontend
+    image: ${DOCKER_USERNAME}/frontend-nginx:latest
     container_name: frontend-nginx-container
     ports:
       - "5173:80"
@@ -26,7 +30,9 @@ services:
     restart: unless-stopped
 
   backend:
-    image: node:20
+    build:
+      context: ./backend
+    image: ${DOCKER_USERNAME}/backend:latest
     container_name: backend-container
     working_dir: /app
     volumes:
