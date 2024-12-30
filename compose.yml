@@ -2,32 +2,16 @@ services:
   frontend-builder:
     image: ${DOCKER_USERNAME}/frontend-builder:latest
     container_name: frontend-builder-container
-    build:
-      context: ./frontend
-      target: builder
-      dockerfile: inline
-      contents: |
-        FROM node:20 as builder
-        WORKDIR /app
-        COPY package*.json ./
-        RUN npm install
-        COPY . .
-        RUN npm run build
+    working_dir: /app
     volumes:
       - ./frontend:/app
+    command: sh -c "npm install && npm run build"
     networks:
       - fs-app
 
   frontend-nginx:
     image: ${DOCKER_USERNAME}/frontend-nginx:latest
     container_name: frontend-nginx-container
-    build:
-      context: ./frontend
-      dockerfile: inline
-      contents: |
-        FROM nginx:latest
-        COPY dist /usr/share/nginx/html
-        COPY nginx.conf /etc/nginx/conf.d/default.conf
     ports:
       - "5173:80"
     volumes:
@@ -43,23 +27,13 @@ services:
   backend:
     image: ${DOCKER_USERNAME}/backend:latest
     container_name: backend-container
-    build:
-      context: ./backend
-      dockerfile: inline
-      contents: |
-        FROM node:20
-        WORKDIR /app
-        COPY package*.json ./
-        RUN npm install
-        COPY . .
-        ENV NODE_ENV=production
-        EXPOSE 3000
-        CMD ["npx", "nodemon", "-L", "index.js"]
+    working_dir: /app
     volumes:
       - ./backend:/app
       - /app/node_modules
     ports:
       - "3000:3000"
+    command: sh -c "npm install && npx nodemon -L index.js"
     environment:
       - NODE_ENV=production
       - MONGO_URL=mongodb://mongo:27017/ums
