@@ -65,6 +65,6 @@ jobs:
 
     - name: Deploy with Docker Compose
       run: |
-        docker-compose pull
-        docker-compose up -d
-        docker-compose ps
+        docker compose pull
+        docker compose up -d
+        docker compose ps
