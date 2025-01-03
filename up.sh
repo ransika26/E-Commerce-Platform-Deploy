@@ -1,3 +1,5 @@
-docker-compose build  
-docker-compose up -d  
+#!/bin/bash
+docker-compose pull
+docker-compose build
+docker-compose up -d
 docker-compose ps
